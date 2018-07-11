@@ -1,4 +1,4 @@
-import buildParts from './build_parts';
+import buildParts, {convertToKeyValueString} from './build_parts';
 import React from 'react';
 
 function GTMParts(args) {
@@ -16,6 +16,18 @@ function GTMParts(args) {
         return <script dangerouslySetInnerHTML={{ __html: parts.script }}></script>;
     }
 
+    function scriptForHead() {
+        const { id, dataLayerName = 'dataLayer', additionalEvents = {}, scheme = '', previewVariables = '' } = parts;
+
+        return (function(w,d,s,l,i){w[l]=w[l]||[];
+            w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js', convertToKeyValueString(additionalEvents)});
+            var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!=dataLayerName?'&l='+l:'';
+            j.async=true;
+            j.src=`${scheme}//www.googletagmanager.com/gtm.js?id=${i}${dl}${previewVariables}`};
+            f.parentNode.insertBefore(j,f);
+        })(window,document,'script',dataLayerName, id);
+    }
+
     function scriptAsHTML() {
         return `<script>${parts.script}</script>`;
     }
@@ -24,7 +36,8 @@ function GTMParts(args) {
         noScriptAsReact,
         noScriptAsHTML,
         scriptAsReact,
-        scriptAsHTML
+        scriptAsHTML,
+        scriptForHead,
     };
 }
 

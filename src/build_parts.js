@@ -1,4 +1,4 @@
-function convertToKeyValueString(obj) {
+export function convertToKeyValueString(obj) {
     return JSON.stringify(obj).slice(1, -1);
 }
 
